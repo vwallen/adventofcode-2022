@@ -1,29 +1,38 @@
 
 use adventofcode_2022::read_input;
+use itertools::Itertools;
 
-fn prepare(file_name: &str) -> Vec<Vec<u32>> {
+pub fn prepare(file_name: &str) -> Vec<Vec<u32>> {
     let input = read_input(file_name);
-    let chunks = input.split("\n\n");
     let mut elves = Vec::<Vec<u32>>::new();
-    for chunk in chunks {
-        elves.push(chunk.lines().map(|n| n.parse().unwrap()).collect::<Vec<u32>>());
+    for chunk in input.split("\n\n") {
+        elves.push(
+            chunk
+                .lines()
+                .map(|n| n.parse::<u32>().unwrap())
+                .collect::<Vec<u32>>()
+        );
     }
     elves
 }
 
-pub fn part_1(file_name: &str) -> Option<u32> {
-    let elves = prepare(file_name);
-    let elves_calories = elves.iter().map(|e| e.iter().sum::<u32>()).collect::<Vec<u32>>();
-    elves_calories.iter().max().copied()
+pub fn part_1(elves: &Vec<Vec<u32>>) -> Option<u32> {
+    let elves_calories = elves
+        .iter()
+        .map(|e| e.iter().sum::<u32>())
+        .max()?;
+    Some(elves_calories)
 }
 
-pub fn part_2(file_name: &str) -> Option<u32> {
-    let elves = prepare(file_name);
-    let mut elves_calories = elves.iter().map(|e| e.iter().sum::<u32>()).collect::<Vec<u32>>();
-    elves_calories.sort();
-    elves_calories.reverse();
-    elves_calories.truncate(3);
-    Some(elves_calories.iter().sum::<u32>())
+pub fn part_2(elves: &Vec<Vec<u32>>) -> Option<u32> {
+    let elves_calories = elves
+        .iter()
+        .map(|e| e.iter().sum::<u32>())
+        .sorted()
+        .rev()
+        .take(3)
+        .sum();
+    Some(elves_calories)
 }
 
 #[cfg(test)]
@@ -31,12 +40,21 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_prepare_elves() {
+        let elves = prepare("day01-example.txt");
+        assert_eq!(elves[0], vec![1000, 2000, 3000]);
+        assert_eq!(elves[elves.len() - 1], vec![10000])
+    }
+
+    #[test]
     fn test_part_1() {
-        assert_eq!(part_1("day01-example.txt"), Some(24000))
+        let elves = prepare("day01-example.txt");
+        assert_eq!(part_1(&elves), Some(24000))
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2("day01-example.txt"), Some(45000))
+        let elves = prepare("day01-example.txt");
+        assert_eq!(part_2(&elves), Some(45000))
     }
 }
