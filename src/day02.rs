@@ -1,57 +1,48 @@
-use adventofcode_2022::read_input;
+use adventofcode_2022::read_input_lines;
 
-pub fn prepare(file_name:&str) -> Vec<(&str, &str)> {
-    let input = read_input(file_name);
-    let mut output = Vec::new();
-    for line in input.lines() {
-        output.push(match line {
-            "A X" => ("A", "X"),
-            "B X" => ("B", "X"),
-            "C X" => ("C", "X"),
-            "A Y" => ("A", "Y"),
-            "B Y" => ("B", "Y"),
-            "C Y" => ("C", "Y"),
-            "A Z" => ("A", "Z"),
-            "B Z" => ("B", "Z"),
-            "C Z" => ("C", "Z"),
-            _ => ("", "")
-        })
-    }
-    output
+const ROCK:u32 = 1;
+const PAPER:u32 = 2;
+const SCISSORS:u32 = 3;
+const WIN:u32 = 6;
+const DRAW:u32 = 3;
+const LOSE:u32 = 0;
+
+pub fn prepare(file_name:&str) -> Vec<String> {
+    read_input_lines(file_name)
 }
 
-pub fn part_1(input: &Vec<(&str, &str)>) -> Option<u32> {
+pub fn part_1(input: &Vec<String>) -> Option<u32> {
     let mut score = 0;
     for game in input.iter() {
-        match game {
-            ("A", "X") => score += 1 + 3,
-            ("B", "X") => score += 1 + 0,
-            ("C", "X") => score += 1 + 6,
-            ("A", "Y") => score += 2 + 6,
-            ("B", "Y") => score += 2 + 3,
-            ("C", "Y") => score += 2 + 0,
-            ("A", "Z") => score += 3 + 0,
-            ("B", "Z") => score += 3 + 6,
-            ("C", "Z") => score += 3 + 3,
+        match game.as_str() {
+            "A X" => score += ROCK + DRAW,
+            "B X" => score += ROCK + LOSE,
+            "C X" => score += ROCK + WIN,
+            "A Y" => score += PAPER + WIN,
+            "B Y" => score += PAPER + DRAW,
+            "C Y" => score += PAPER + LOSE,
+            "A Z" => score += SCISSORS + LOSE,
+            "B Z" => score += SCISSORS + WIN,
+            "C Z" => score += SCISSORS + DRAW,
             _ => score += 0
         }
     }
     Some(score)
 }
 
-pub fn part_2(input: &Vec<(&str, &str)>) -> Option<u32> {
+pub fn part_2(input: &Vec<String>) -> Option<u32> {
     let mut score = 0;
     for game in input.iter() {
-        match game {
-            ("A", "X") => score += 3 + 0,
-            ("B", "X") => score += 1 + 0,
-            ("C", "X") => score += 2 + 0,
-            ("A", "Y") => score += 1 + 3,
-            ("B", "Y") => score += 2 + 3,
-            ("C", "Y") => score += 3 + 3,
-            ("A", "Z") => score += 2 + 6,
-            ("B", "Z") => score += 3 + 6,
-            ("C", "Z") => score += 1 + 6,
+        match game.as_str() {
+            "A X" => score += SCISSORS + LOSE,
+            "B X" => score += ROCK + LOSE,
+            "C X" => score += PAPER + LOSE,
+            "A Y" => score += ROCK + DRAW,
+            "B Y" => score += PAPER + DRAW,
+            "C Y" => score += SCISSORS + DRAW,
+            "A Z" => score += PAPER + WIN,
+            "B Z" => score += SCISSORS + WIN,
+            "C Z" => score += ROCK + WIN,
             _ => score += 0
         }
     }
@@ -67,7 +58,7 @@ mod test {
     #[test]
     fn test_prepare() {
         let input = prepare("day02-example.txt");
-        assert_eq!(input[0], ("A", "Y"))
+        assert_eq!(input[0], "A Y".to_string())
     }
 
     #[test]
