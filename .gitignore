@@ -1,7 +1,8 @@
 /target
 
 # input files
-/input/*.txt
+input/*
+!input/*-example.txt
 
 # usual cruft
 .Ds_Store
