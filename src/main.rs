@@ -5,6 +5,7 @@ pub mod day02b;
 pub mod day03;
 pub mod day04;
 pub mod day04b;
+pub mod day04c;
 
 fn main() {
     println!("=== Advent of Code 2022 ====");
@@ -32,7 +33,12 @@ fn main() {
     let input_day4 = day04::prepare("day04.txt");
     println!("⭐ {}", day04::part_1(&input_day4).unwrap());
     println!("⭐ {}", day04::part_2(&input_day4).unwrap());
+    println!("---");
     let input_day4b = day04b::prepare("day04.txt");
     println!("⭐ {}", day04b::part_1(&input_day4b).unwrap());
     println!("⭐ {}", day04b::part_2(&input_day4b).unwrap());
+    println!("---");
+    let input_day4c = day04c::prepare("day04.txt");
+    println!("⭐ {}", day04c::part_1(&input_day4c).unwrap());
+    println!("⭐ {}", day04c::part_2(&input_day4c).unwrap());
 }
