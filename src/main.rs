@@ -38,7 +38,8 @@ fn main() {
     println!("⭐ {}", day04b::part_1(&input_day4b).unwrap());
     println!("⭐ {}", day04b::part_2(&input_day4b).unwrap());
     println!("---");
-    let input_day4c = day04c::prepare("day04.txt");
-    println!("⭐ {}", day04c::part_1(&input_day4c).unwrap());
-    println!("⭐ {}", day04c::part_2(&input_day4c).unwrap());
+    if let Ok(input_day4c) = day04c::prepare("day04.txt") {
+        println!("⭐ {}", day04c::part_1(&input_day4c).unwrap());
+        println!("⭐ {}", day04c::part_2(&input_day4c).unwrap());
+    }
 }
