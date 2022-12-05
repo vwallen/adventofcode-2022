@@ -1,14 +1,14 @@
 use adventofcode_2022::read_input_lines;
 use itertools::Itertools;
 
-#[derive(PartialEq, Clone, Copy)]
+#[derive(Eq, PartialEq, Clone, Copy)]
 pub enum Play {
     Rock = 1,
     Paper = 2,
     Scissors = 3,
 }
 
-#[derive(PartialEq, Clone, Copy)]
+#[derive(Eq, PartialEq, Clone, Copy)]
 pub enum Outcome {
     Win = 6,
     Draw = 3,
@@ -21,7 +21,7 @@ pub fn prepare(file_name:&str) -> Vec<(String, String)> {
     read_input_lines(file_name)
         .iter()
         .map(|line| {
-            line.split(" ")
+            line.split(' ')
                 .map(|c| c.to_string())
                 .next_tuple().unwrap()
         })
@@ -68,7 +68,7 @@ pub fn calculate_score_2(p1:Play, outcome:Outcome) -> u16 {
     }
 }
 
-pub fn part_1(input: &Vec<(String, String)>) -> Option<u16> {
+pub fn part_1(input: &[(String, String)]) -> Option<u16> {
     let mut score = 0;
     for result in input.iter() {
         score += calculate_score_1(
@@ -79,7 +79,7 @@ pub fn part_1(input: &Vec<(String, String)>) -> Option<u16> {
     Some(score)
 }
 
-pub fn part_2(input: &Vec<(String, String)>) -> Option<u16> {
+pub fn part_2(input: &[(String, String)]) -> Option<u16> {
     let mut score = 0;
     for result in input.iter() {
         score += calculate_score_2(

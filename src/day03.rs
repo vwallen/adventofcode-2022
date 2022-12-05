@@ -6,11 +6,11 @@ const CODES:&str = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 pub fn prepare(file_name: &str) -> Vec<String> {
     read_input_lines(file_name)
         .iter()
-        .map(| line | String::from(line))
+        .map(String::from)
         .collect::<Vec<String>>()
 }
 
-pub fn part_1(input: &Vec<String>) -> Option<u32> {
+pub fn part_1(input: &[String]) -> Option<u32> {
     let mut items:Vec<char> = Vec::new();
     for pair in input.iter().map(|x| x.split_at(x.len()/2)) {
         let a: HashSet<char> = pair.0.chars().into_iter().collect();
@@ -22,7 +22,7 @@ pub fn part_1(input: &Vec<String>) -> Option<u32> {
     Some(result as u32)
 }
 
-pub fn part_2(input: &Vec<String>) -> Option<u32> {
+pub fn part_2(input: &[String]) -> Option<u32> {
     let mut items:Vec<char> = Vec::new();
     for sack in input.chunks(3) {
         let a: HashSet<char> = sack[0].chars().into_iter().collect();

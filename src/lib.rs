@@ -8,7 +8,7 @@ pub fn read_input(file_name: &str) -> String {
 }
 
 pub fn read_input_lines(file_name: &str) -> Vec<String> {
-    read_input(file_name).lines().map(|line| String::from(line)).collect()
+    read_input(file_name).lines().map(String::from).collect()
 }
 
 #[cfg(test)]

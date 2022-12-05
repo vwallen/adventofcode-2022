@@ -11,7 +11,7 @@ pub fn prepare(file_name:&str) -> Vec<String> {
     read_input_lines(file_name)
 }
 
-pub fn part_1(input: &Vec<String>) -> Option<u32> {
+pub fn part_1(input: &[String]) -> Option<u32> {
     let mut score = 0;
     for game in input.iter() {
         match game.as_str() {
@@ -30,7 +30,7 @@ pub fn part_1(input: &Vec<String>) -> Option<u32> {
     Some(score)
 }
 
-pub fn part_2(input: &Vec<String>) -> Option<u32> {
+pub fn part_2(input: &[String]) -> Option<u32> {
     let mut score = 0;
     for game in input.iter() {
         match game.as_str() {

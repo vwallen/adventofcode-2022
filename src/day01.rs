@@ -16,7 +16,7 @@ pub fn prepare(file_name: &str) -> Vec<Vec<u32>> {
     elves
 }
 
-pub fn part_1(elves: &Vec<Vec<u32>>) -> Option<u32> {
+pub fn part_1(elves: &[Vec<u32>]) -> Option<u32> {
     let elves_calories = elves
         .iter()
         .map(|e| e.iter().sum::<u32>())
@@ -24,7 +24,7 @@ pub fn part_1(elves: &Vec<Vec<u32>>) -> Option<u32> {
     Some(elves_calories)
 }
 
-pub fn part_2(elves: &Vec<Vec<u32>>) -> Option<u32> {
+pub fn part_2(elves: &[Vec<u32>]) -> Option<u32> {
     let elves_calories = elves
         .iter()
         .map(|e| e.iter().sum::<u32>())

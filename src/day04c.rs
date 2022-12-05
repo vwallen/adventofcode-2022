@@ -42,7 +42,7 @@ pub fn prepare(file_name:&str) -> Result<Vec<Assignment>> {
         .collect()
 }
 
-pub fn part_1(input: &Vec<Assignment>) -> Option<u32> {
+pub fn part_1(input: &[Assignment]) -> Option<u32> {
     let count = input
         .iter()
         .filter(|a| a.is_overlapping())
@@ -50,7 +50,7 @@ pub fn part_1(input: &Vec<Assignment>) -> Option<u32> {
     Some(count as u32)
 }
 
-pub fn part_2(input: &Vec<Assignment>) -> Option<u32> {
+pub fn part_2(input: &[Assignment]) -> Option<u32> {
     let count = input
         .iter()
         .filter(|a| !a.is_disjoint())
@@ -67,7 +67,7 @@ mod test {
     fn test_prepare() {
         let input = prepare("day04-example.txt").unwrap();
         assert!(input[3].is_overlapping());
-        assert_eq!(input[3].is_disjoint(), false);
+        assert!(!input[3].is_disjoint());
     }
 
     #[test]

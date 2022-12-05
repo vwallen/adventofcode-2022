@@ -3,7 +3,7 @@ use std::ops::RangeInclusive;
 
 fn parse_range(pattern: &str) -> RangeInclusive<u16> {
     let mut rng = 0..=0;
-    if let Some((a, b)) = pattern.split_once("-") {
+    if let Some((a, b)) = pattern.split_once('-') {
         rng = RangeInclusive::new(a.parse().unwrap(), b.parse().unwrap())
     }
     rng    
@@ -12,14 +12,14 @@ fn parse_range(pattern: &str) -> RangeInclusive<u16> {
 pub fn prepare(file_name:&str) -> Vec<(RangeInclusive<u16>, RangeInclusive<u16>)> {
     let mut input = Vec::new();
     for line in read_input_lines(file_name).iter() {
-        if let Some((a, b)) = line.split_once(",") {
+        if let Some((a, b)) = line.split_once(',') {
             input.push((parse_range(a), parse_range(b)));
         }
     }
     input
 }
 
-pub fn part_1(input: &Vec<(RangeInclusive<u16>, RangeInclusive<u16>)>) -> Option<u32> {
+pub fn part_1(input: &[(RangeInclusive<u16>, RangeInclusive<u16>)]) -> Option<u32> {
     let count = input
         .iter()
         .filter(|(a, b)| (a.start() >= b.start() && a.end() <= b.end()) || (b.start() >= a.start() && b.end() <= a.end()))
@@ -27,7 +27,7 @@ pub fn part_1(input: &Vec<(RangeInclusive<u16>, RangeInclusive<u16>)>) -> Option
     Some(count as u32)
 }
 
-pub fn part_2(input: &Vec<(RangeInclusive<u16>, RangeInclusive<u16>)>) -> Option<u32> {
+pub fn part_2(input: &[(RangeInclusive<u16>, RangeInclusive<u16>)]) -> Option<u32> {
     let count = input
         .iter()
         .filter(|(a, b)| (a.end() >= b.start() && a.end() <= b.end()) || (b.end() >= a.start() && b.end() <= a.end()))
