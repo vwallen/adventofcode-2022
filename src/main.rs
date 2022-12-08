@@ -8,6 +8,9 @@ pub mod day04b;
 pub mod day04c;
 pub mod day05;
 pub mod day06;
+pub mod day07;
+pub mod day08;
+pub mod day09;
 
 fn main() {
     println!("=== Advent of Code 2022 ====");
@@ -46,8 +49,8 @@ fn main() {
     }
 
     println!("---------- Day 05 ----------");
-    println!("⭐");
-    println!("⭐");
+    println!("💀");
+    println!("💀");
 
 
     println!("---------- Day 06 ----------");
@@ -55,5 +58,14 @@ fn main() {
         println!("⭐ {}", day06::part_1(&input_day06).unwrap());
         println!("⭐ {}", day06::part_2(&input_day06).unwrap());
     }
+
+    println!("---------- Day 07 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 08 ----------");
+    println!("💀");
+    println!("💀");
+
 
 }
