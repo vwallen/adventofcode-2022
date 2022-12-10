@@ -1,3 +1,4 @@
+#[macro_use] extern crate scan_rules;
 
 pub mod day01;
 pub mod day02;
@@ -49,9 +50,12 @@ fn main() {
     }
 
     println!("---------- Day 05 ----------");
-    println!("💀");
-    println!("💀");
-
+    if let Ok((mut day05_inventory, day05_commands)) = day05::prepare("day05.txt") {
+        println!("⭐ {}", day05::part_1(&mut day05_inventory, day05_commands).unwrap());
+    }
+    if let Ok((mut day05_inventory, day05_commands)) = day05::prepare("day05.txt") {
+        println!("⭐ {}", day05::part_2(&mut day05_inventory, day05_commands).unwrap());
+    }
 
     println!("---------- Day 06 ----------");
     if let Ok(input_day06) = day06::prepare("day06.txt") {

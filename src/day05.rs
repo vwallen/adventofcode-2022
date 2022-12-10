@@ -3,6 +3,7 @@ use itertools::Itertools;
 use anyhow::{Result};
 use std::str::FromStr;
 
+#[derive(Debug, Eq, PartialEq)]
 pub struct SupplyCrate(char);
 
 pub enum MoveHow {
@@ -10,24 +11,17 @@ pub enum MoveHow {
     AtOnce,
 }
 
-#[derive(Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct MoveCommand {
     src: usize,
     dst: usize,
-    amt: usize,
+    amt: u8,
 }
 impl FromStr for MoveCommand {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        // this seems overly convoluted and terrible
-        let (amt, src, dst) = 
-            s.split(' ')
-            .map(|w| w.parse::<usize>())
-            .filter(Result::is_ok)
-            .map(Result::unwrap)
-            .next_tuple()
-            .unwrap();
+        let_scan!(s; ("move ", let amt:u8, " from ", let src:usize, " to ", let dst:usize));
         Ok(Self{ src: src - 1, dst: dst - 1, amt })
     }
 }
@@ -49,7 +43,7 @@ impl Inventory {
         self.stacks[pos].push(item);
     }
 
-    fn move_crate(&mut self, src: usize, dst: usize, amount: usize, how:MoveHow) {
+    fn move_crate(&mut self, src: usize, dst: usize, amount: u8, how:MoveHow) {
         use MoveHow::*;
         match how {
             Singly => for _ in 0..amount {
@@ -58,7 +52,8 @@ impl Inventory {
             },
             AtOnce => {
                 let stack_from = &mut self.stacks[src];
-                let items = stack_from.split_off(stack_from.len() - amount);
+                let stack_index:i16 = (stack_from.len() - amount as usize).try_into().unwrap();
+                let items = stack_from.split_off(stack_index.try_into().unwrap());
                 for item in items.into_iter() {
                     self.stacks[dst].push(item);
                 }
@@ -70,47 +65,56 @@ impl Inventory {
         self.stacks.iter().map(|x| x.last().unwrap().0).join("")
     }
 }
+impl FromStr for Inventory {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut me = Inventory::default();
+
+        let mut inv = s.lines().rev();
+        if let Some(header_line) = inv.next() {
+            for i in 0..=(header_line.len()/4) {
+                me.add(i as usize);
+            }
+        }
+
+        for stack_line in inv {
+            for (i, ch) in stack_line.chars().enumerate() {
+                if let Some(krate) = match ch {
+                    ' '|'['|']' => None,
+                              _ => Some(ch)
+                } {
+                    me.place(SupplyCrate(krate), i/4);
+                }
+            }
+        }
+        Ok(me)
+    }
+}
 
 //--------------------------------------------------
 
 pub fn prepare(file_name:&str) -> Result<(Inventory, Vec<MoveCommand>)> {
     let input = read_input(file_name);
-    let (_inventory_section, command_section) = input.split_once("\n\n").unwrap();
-    
-    let mut inventory = Inventory::default();
-    inventory.add(0);
-    inventory.add(1);
-    inventory.add(2);
-    inventory.place(SupplyCrate('Z'), 0);
-    inventory.place(SupplyCrate('N'), 0);
-    inventory.place(SupplyCrate('M'), 1);
-    inventory.place(SupplyCrate('C'), 1);
-    inventory.place(SupplyCrate('D'), 1);
-    inventory.place(SupplyCrate('P'), 2);
+    let (inventory_section, command_section) = input.split_once("\n\n").unwrap();
 
+    let inventory:Inventory = inventory_section.parse().unwrap();
     let commands = command_section.lines().map(|line| line.parse().unwrap()).collect();
 
     Ok((inventory, commands))
 }
 
-
 pub fn part_1(inventory:&mut Inventory, commands: Vec<MoveCommand>) -> Option<String> {
-    use MoveHow::*;
-
     for cmd in commands.iter() {
-        inventory.move_crate(cmd.src, cmd.dst, cmd.amt, Singly)
+        inventory.move_crate(cmd.src, cmd.dst, cmd.amt, MoveHow::Singly)
     }
-
     Some(inventory.peek())
 }
 
 pub fn part_2(inventory:&mut Inventory, commands: Vec<MoveCommand>) -> Option<String> {
-    use MoveHow::*;
-
     for cmd in commands.iter() {
-        inventory.move_crate(cmd.src, cmd.dst, cmd.amt, AtOnce)
+        inventory.move_crate(cmd.src, cmd.dst, cmd.amt, MoveHow::AtOnce)
     }
-
     Some(inventory.peek())
 }
 
@@ -150,7 +154,8 @@ mod test {
 
     #[test]
     fn test_prepare() {
-        let (_inventory, commands) = prepare("day05-example.txt").unwrap();
+        let (inventory, commands) = prepare("day05-example.txt").unwrap();
+        assert_eq!(inventory.stacks[0][0], SupplyCrate('Z'));
         assert_eq!(commands[0], MoveCommand{ src: 1, dst: 0, amt: 1});
         assert_eq!(commands[3], MoveCommand{ src: 0, dst: 1, amt: 1});
     }
