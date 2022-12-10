@@ -74,9 +74,10 @@ pub fn part_2(instructions: &[OpCode]) -> Option<Vec<char>> {
         let mut x_register:isize = 1;
         for (cycle, signal) in signals.iter().enumerate() {
             let beam_col = cycle % 40;
-            let pixl_col = x_register % 40;
-            if (beam_col as isize - pixl_col).abs() < 2 {
-                pattern.splice(cycle..=cycle, ['#']);
+            let pixl_col = x_register;
+            let guard = (beam_col as isize - pixl_col).abs();
+            if guard < 2 {
+                pattern[cycle] = '#';
             }
             x_register += signal;
         }
