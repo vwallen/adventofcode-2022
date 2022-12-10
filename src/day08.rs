@@ -21,6 +21,7 @@ mod test {
     use super::*;
 
     #[test]
+    #[ignore]
     fn test_part_1() {
         if let Ok(input) = prepare("day08-example.txt") {
             assert_eq!(part_1(&input), Some(1))
@@ -28,6 +29,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn test_part_2() {
         if let Ok(input) = prepare("day08-example.txt") {
             assert_eq!(part_2(&input), Some(1))
