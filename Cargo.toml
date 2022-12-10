@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.66"
+colored = "2.0.0"
 itertools = "0.10.5"
 scan-rules = "0.2.0"
