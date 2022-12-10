@@ -12,6 +12,7 @@ pub mod day06;
 pub mod day07;
 pub mod day08;
 pub mod day09;
+pub mod day10;
 
 fn main() {
     println!("=== Advent of Code 2022 ====");
@@ -71,5 +72,77 @@ fn main() {
     println!("💀");
     println!("💀");
 
+    println!("---------- Day 09 ----------");
+    println!("💀");
+    println!("💀");
 
+    println!("---------- Day 10 ----------");
+    if let Ok((mut day10_input)) = day10::prepare("day10.txt") {
+        println!("⭐ {}", day10::part_1(&day10_input).unwrap());
+        // println!("⭐ {}", day10::part_2(&day10_input).unwrap());
+    }
+
+    /*
+
+    println!("---------- Day 11 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 12 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 13 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 14 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 15 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 16 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 17 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 18 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 19 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 20 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 21 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 22 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 23 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 24 ----------");
+    println!("💀");
+    println!("💀");
+
+    println!("---------- Day 25 ----------");
+    println!("💀");
+    println!("💀");
+*/
+    println!("----------------------------")
 }
