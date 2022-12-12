@@ -89,7 +89,9 @@ fn main() {
     println!("{} {} {}", "----------".red(), "Day 10".bright_green(), "----------".red());
     if let Ok(day11_input) = day11::prepare("day11.txt") {
         println!("⭐ {}", day11::part_1(day11_input).unwrap());
-        println!("💀");
+    }
+    if let Ok(day11_input) = day11::prepare("day11.txt") {
+        println!("⭐ {}", day11::part_2(day11_input).unwrap());
     }
 
     /*

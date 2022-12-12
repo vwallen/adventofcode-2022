@@ -28,7 +28,7 @@ impl MonkeyOp {
 pub struct Monkey {
     items: VecDeque<usize>,
     inspect: MonkeyOp,
-    decide: MonkeyOp,
+    decider: MonkeyOp,
     activity: usize,
 }
 impl Monkey {
@@ -41,14 +41,17 @@ impl Monkey {
         } else { None }
     }
 
-    pub fn ennui(&mut self) {
+    pub fn ennui(&mut self, ennui:usize, magic:usize) {
         if let Some(item) = self.items.front() {
-            self.items[0] = item / 3;
+            // I can't take credit for the magic number bit
+            // and though I would have gotten there eventually
+            // it would not have been without frustration
+            self.items[0] = (item / ennui) % magic;
         }
     }
 
     pub fn decide(&mut self) -> Option<usize> {
-        self.items.front().map(|item| self.decide.call(*item))
+        self.items.front().map(|item| self.decider.call(*item))
     }
 
     pub fn throw(&mut self) -> Option<usize> {
@@ -89,18 +92,18 @@ impl FromStr for Monkey {
         let_scan!(lines[5]; ("If false: throw to monkey", let target_2:usize));
         let decide = Decider(test_value, target_1, target_2);
 
-        Ok(Monkey{ items, inspect, decide, activity: 0, })
+        Ok(Monkey{ items, inspect, decider: decide, activity: 0, })
     }
 }
 
-pub fn run_round(monkeys:&mut Vec<Monkey>) {
+pub fn run_round(monkeys:&mut Vec<Monkey>, ennui:usize, magic:usize) {    
     for idx in 0..monkeys.len() {
         // after all this we should end up with:
         // monkeys_before:&[_], current_monkey, monkeys_upcoming:&[_]
         let (before, rest) = monkeys.split_at_mut(idx);
         if let Some((monkey, after)) = rest.split_first_mut() {
             while monkey.inspect().is_some() {
-                monkey.ennui();
+                monkey.ennui(ennui, magic);
                 let catcher = monkey.decide().unwrap();
                 let item    = monkey.throw().unwrap();
                 match catcher.cmp(&idx) {
@@ -113,6 +116,13 @@ pub fn run_round(monkeys:&mut Vec<Monkey>) {
     }
 }
 
+pub fn get_magic_number(monkeys:&[Monkey]) -> usize {
+    monkeys
+        .iter()
+        .map(|m| if let MonkeyOp::Decider(n,_,_) = m.decider { n } else { 1 })
+        .product()
+}
+
 pub fn prepare(file_name: &str) -> Result<Vec<Monkey>> {
     let mut monkeys = Vec::new();
     for monkey_section in read_input(file_name).split("\n\n") {
@@ -122,8 +132,9 @@ pub fn prepare(file_name: &str) -> Result<Vec<Monkey>> {
 }
 
 pub fn part_1(mut monkeys:Vec<Monkey>) -> Option<usize> {
+    let magic = get_magic_number(&monkeys);
     for _ in 0..20 {
-        run_round(&mut monkeys);
+        run_round(&mut monkeys, 3, magic);
     }
     monkeys.sort_by(|a, b| b.activity.cmp(&a.activity));
     Some(monkeys[0].activity * monkeys[1].activity)
@@ -132,7 +143,12 @@ pub fn part_1(mut monkeys:Vec<Monkey>) -> Option<usize> {
 #[allow(unused_mut)]
 #[allow(unused_variables)]
 pub fn part_2(mut monkeys: Vec<Monkey>) -> Option<usize> {
-    None
+    let magic = get_magic_number(&monkeys);
+    for _ in 0..10000 {
+        run_round(&mut monkeys, 1, magic);
+    }
+    monkeys.sort_by(|a, b| b.activity.cmp(&a.activity));
+    Some(monkeys[0].activity * monkeys[1].activity)
 }
 
 #[cfg(test)]
@@ -143,7 +159,8 @@ mod test {
     #[test]
     fn test_round_1() {
         if let Ok(mut monkeys) = prepare("day11-example.txt") {
-            run_round(&mut monkeys);
+            let magic = get_magic_number(&monkeys);
+            run_round(&mut monkeys, 3, magic);
             assert_eq!(monkeys[0].items,[20, 23, 27, 26]);
             assert_eq!(monkeys[1].items, [2080, 25, 167, 207, 401, 1046]);
             assert!(monkeys[2].items.is_empty());
@@ -154,8 +171,9 @@ mod test {
     #[test]
     fn test_round_20() {
         if let Ok(mut monkeys) = prepare("day11-example.txt") {
+            let magic = get_magic_number(&monkeys);
             for _ in 0..20 {
-                run_round(&mut monkeys);
+                run_round(&mut monkeys, 3, magic);
             }
             assert_eq!(monkeys[0].items, [10, 12, 14, 26, 34]);
             assert_eq!(monkeys[1].items, [245, 93, 53, 199, 115]);
@@ -170,7 +188,7 @@ mod test {
         if let Ok(monkeys) = prepare("day11-example.txt") {
             assert_eq!(monkeys[0].items, [79, 98]);
             assert_eq!(monkeys[0].inspect, Multer(19));
-            assert_eq!(monkeys[0].decide, Decider(23, 2, 3));
+            assert_eq!(monkeys[0].decider, Decider(23, 2, 3));
             assert_eq!(monkeys[1].inspect, Adder(6));
             assert_eq!(monkeys[2].inspect, Square);
         } else { panic!("No monkeys!")}
@@ -184,10 +202,9 @@ mod test {
     }
 
     #[test]
-    #[ignore]
     fn test_part_2() {
         if let Ok(monkeys) = prepare("day11-example.txt") {
-            assert_eq!(part_2(monkeys), Some(1))
+            assert_eq!(part_2(monkeys), Some(2713310158))
         } else { panic!("No monkeys!")}
     }
 }
